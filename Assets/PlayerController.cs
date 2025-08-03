@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed = 10f;
     [SerializeField] private Rigidbody2D rb;
     private Vector2 movement;
+    private bool isFacingRight = true;
 
 
     void Awake()
@@ -36,11 +37,27 @@ public class PlayerController : MonoBehaviour
         float moveVertical = Input.GetAxis("Vertical");
 
         movement = new Vector2(moveHorizontal, moveVertical);
+        if (movement.x > 0 && !isFacingRight)
+        {
+            Flip();
+        }
+        else if (movement.x < 0 && isFacingRight)
+        {
+            Flip();
+        }
+
     }
     void MovePlayer()
     {
         movement.Normalize(); // Ensure consistent speed in all directions
         rb.velocity = movement * speed;
+    }
+    void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        Vector2 currentScale = transform.localScale;
+        currentScale.x *= -1;
+        transform.localScale = currentScale;
     }
     
 }
